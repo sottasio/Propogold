@@ -15,6 +15,8 @@ In order to run this software, Java must be installed on your computer. You are 
 
 You are also going to need some .jpg files (already uploaded as a folder named Images) that are displayed in Swing form.
 
+Main class is gui.java.
+
 Because of the fact that this softwares writes and reads from disc, a maximum space of about 200mb is needed.
 
 # Use of this software
