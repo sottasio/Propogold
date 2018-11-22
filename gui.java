@@ -123,6 +123,7 @@ public class gui extends JFrame implements Printable, ItemListener{
    private JTextField txtLimDown = new JTextField("0");
  
    private JGradientButton btnView ;
+   private JGradientButton btnMakeVariable;
    private JGradientButton btnWinCheck ;
    private JGradientButton btnCurrentView ;
    
@@ -179,8 +180,8 @@ public class gui extends JFrame implements Printable, ItemListener{
 	   pnlOperations.add(btnWinCheck, "pos 350 200");
 	   
 	   
-	   JGradientButton btnMetavlito = new JGradientButton(200, 50, 13,"Variable calc", "Variable based on column file",156,142,175);
-	   pnlOperations.add(btnMetavlito, "pos 100 100");
+	   btnMakeVariable = new JGradientButton(200, 50, 13,"Variable calc", "Variable based on column file",156,142,175);
+	   pnlOperations.add(btnMakeVariable, "pos 100 100");
 	   
 	   JGradientButton btnConditionsToFile = new JGradientButton(200, 50, 13,"System to doc file", "Saves system details as .doc file",156,142,175);
 	   pnlOperations.add(btnConditionsToFile, "pos 100 200");
@@ -1305,7 +1306,7 @@ btnCurrentView.addActionListener(new ActionListener() {
 	}
 });
 
-btnMetavlito.addActionListener(new ActionListener() {
+btnMakeVariable.addActionListener(new ActionListener() {
 	public void actionPerformed(ActionEvent e){
 		
 		VariableView prv = new VariableView();
