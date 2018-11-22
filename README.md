@@ -1,4 +1,4 @@
-#**Propogold
+# Propogold
 Software for using statistics and combinations for the gambling game Propogoal in Greece.
 # Motivation
 This piece of software was built after my friend's wish to have an opportunity to bet with the maximum of possibilities to win.
