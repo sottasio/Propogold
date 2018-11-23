@@ -20,7 +20,8 @@ Main class is gui.java.
 Because of the fact that this softwares writes and reads from disc, a maximum space of about 200mb is needed.
 
 # Use of this software
-A seperate help file is included to make the first steps in using this software
+A seperate help file is included to make the first steps in using this software.
 
 # Credits
 I would like to thank my friend for inspiring me to do such a software and also all who test it and tell me if they find it useful.
+Send your complaints or suggestions at : sottasiogmail.com.
