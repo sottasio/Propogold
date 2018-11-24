@@ -206,9 +206,9 @@ btnWinCheck.addActionListener(new ActionListener() {
 
 public void calculateWinnings() {
 	
-	//DefaultTableModel tableModel3 = (DefaultTableModel) tblDialogi.getModel();
 	
-	 // Άδειασμα του agondial που είναι το arraylist που αποθηκεύονται οι αριθμοί της Νικήτριας στήλης
+	
+	 
 	   if(matches.size() > 0)
 	   matches.clear();
 	   
@@ -281,7 +281,7 @@ public void calculateWinnings() {
 		   
 	   {
 		   
-		   Message m = new Message("Σφάλμα", "Επιλέξτε από 1-8 αριθμούς", "Error");
+		   Message m = new Message("Error", "Select 1-8 numbers", "Error");
 		   m.show();
 		   
 	   }
@@ -335,7 +335,7 @@ String[] row = null;
 	
 } catch (IOException e1) {
 	
-	Message m = new Message("Σφάλμα", "Μη κατάλληλο αρχείο - δε μπορεί να διαβαστεί!","Error");
+	Message m = new Message("Error", "Not a proper file - can't be loaded!","Error");
 	m.show();
 	
 }
@@ -357,9 +357,9 @@ String[] row = null;
 public void showAnalysis(int row, int rightChoises, ArrayList<ArrayList<Integer>> arr){
 	
 	
-		String str = "<html>Έχετε " + rightChoises + " σωστά στη στήλη " + (row+1) + " :<br>" + arr.get(row).toString().substring(1, arr.get(row).toString().length()-1) + "</html>";
+		String str = "<html>There are " + rightChoises + " right in column " + (row+1) + " :<br>" + arr.get(row).toString().substring(1, arr.get(row).toString().length()-1) + "</html>";
 		
-		Message m = new Message("Επιτυχία", str,"Info");
+		Message m = new Message("Success", str,"Info");
 		
 		m.show();
 		
