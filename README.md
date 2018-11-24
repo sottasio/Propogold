@@ -24,4 +24,4 @@ A seperate help file is included to make the first steps in using this software.
 
 # Credits
 I would like to thank my friend for inspiring me to do such a software and also all who test it and tell me if they find it useful.
-Send your complaints or suggestions at : sottasiogmail.com.
+Send your complaints or suggestions at : sottasio at gmail.com.
