@@ -1283,7 +1283,7 @@ btnWinCheck.addActionListener(new ActionListener() {
 		WinningCheckView dlg = new WinningCheckView();
 		dlg.setTitle("Winnings check");
         dlg.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dlg.setSize(430, 450);
+        dlg.setSize(670,450);
         dlg.setResizable(false);
         dlg.setLocation(400, 100);
         dlg.setVisible(true);

@@ -29,9 +29,13 @@ public class WinningCheckView extends BaseView implements ItemListener{
 	private JGradientButton btnWinCheck;
 	private JGradientButton btnCurrentColumns;
 	private JPanel matches_jpl;
+	private JPanel matches_finished_jpl;
 	private JCheckBox matches_check_checkboxes[];
+	private JCheckBox matches_finished_checkboxes[];
 	private JCheckBox analysis;
+	private JCheckBox prediction;
 	private ArrayList<Integer> matches;
+	private ArrayList<Integer> matches_finished;
 	
 	
 	public WinningCheckView(){
@@ -39,43 +43,61 @@ public class WinningCheckView extends BaseView implements ItemListener{
 		super();
 		
 		matches = new ArrayList<Integer>();
+		matches_finished = new ArrayList<Integer>();
+		
 		
 		matches_jpl = new JPanel();
-		matches_check_checkboxes = new JCheckBox[30];
-		
 		matches_jpl.setLayout(new MigLayout());
+		
+		matches_finished_jpl = new JPanel();
+		matches_finished_jpl.setLayout(new MigLayout());
+		
+		matches_check_checkboxes = new JCheckBox[30];
+		matches_finished_checkboxes = new JCheckBox[30];
 		
 		matches_jpl.setPreferredSize(new Dimension(220,245));
 		matches_jpl.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+		
+		matches_finished_jpl.setPreferredSize(new Dimension(220,245));
+		matches_finished_jpl.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		
 		btnCurrentColumns = new JGradientButton(100, 35, 13,"Current", "Selects the current columns",156,142,175);
 		btnWinCheck = new JGradientButton(100, 35, 13,"Check", "Checks if there is a winning column",156,142,175);
 
 		analysis = new JCheckBox("<html><b>Analysis</html></b>");
-		
+		prediction = new JCheckBox("<html><b>Prediction</html></b>");
 		
 		 JLabel jl = new JLabel("<HTML><U>Select winning column</U></HTML>");
 		 jl.setFont(new Font("Arial", Font.BOLD, 13));
 		 jl.setForeground(new Color(0,128,0));
 		 
+		 JLabel jl2 = new JLabel("<HTML><U>Select finished matches</U></HTML>");
+		 jl2.setFont(new Font("Arial", Font.BOLD, 13));
+		 jl2.setForeground(new Color(0,128,0));
+		 
 		 super.getJpl().add(jl,"pos 60 20");
 		 super.getJpl().add(matches_jpl, "pos 20 50");
 		
-		 
+		 super.getJpl().add(jl2,"pos 450 20");
+		 super.getJpl().add(matches_finished_jpl, "pos 420 50");
 		 
 		for(int i=0; i<30; i++){
 			   
 			   matches_check_checkboxes[i] = new JCheckBox(i+1 + ".");
 			   matches_check_checkboxes[i].setFont(new Font("Arial",Font.BOLD, 12));
 			   
+			   matches_finished_checkboxes[i] = new JCheckBox(i+1 + ".");
+			   matches_finished_checkboxes[i].setFont(new Font("Arial",Font.BOLD, 12));
+			   
 				  int col = i%5;
-				  int seira = i/5 + 1;
+				  int row = i/5 + 1;
 				  int f = 10 + col * 40 ;
-				  int g = -30 + seira * 40;
+				  int g = -30 + row * 40;
 				  
 				  String cell = "pos " + f + " " + g + "";
 				
 				  matches_jpl.add(matches_check_checkboxes[i],cell);
+				  matches_finished_jpl.add(matches_finished_checkboxes[i],cell);
 				 
 			   }
 		
@@ -88,11 +110,14 @@ public class WinningCheckView extends BaseView implements ItemListener{
 		super.getJpl().add(super.getLblFile(), "pos 50 310");
 		super.getJpl().add(super.getLblSumColumns(), "pos 50 330");
 		
-		super.getJpl().add(analysis, "pos 280 280");
-
+		super.getJpl().add(analysis, "pos 280 260");
+		super.getJpl().add(prediction, "pos 280 280");
+		
 		btnWinCheck.setEnabled(false);
 	    analysis.setEnabled(false);
-		
+	    prediction.setEnabled(false);
+	    
+	    
 		for(int i=0; i<super.getJpl().getComponentCount(); i++) {
 			Component co = super.getJpl().getComponent(i);
 				addPointerHand(co);		
@@ -102,7 +127,7 @@ public class WinningCheckView extends BaseView implements ItemListener{
 		   
 		for(int i=0; i<30; i++) {			
 			matches_check_checkboxes[i].addItemListener(this);
-			
+			matches_finished_checkboxes[i].addItemListener(this);
 		}
 		
 		
@@ -116,6 +141,7 @@ super.getBtnSelect().addActionListener(new ActionListener() {
 					
 					btnWinCheck.setEnabled(true);
 				    analysis.setEnabled(true);
+				    prediction.setEnabled(true);
 				    
 				}
 			
@@ -143,6 +169,8 @@ btnCurrentColumns.addActionListener(new ActionListener() {
 		    	 
 		        btnWinCheck.setEnabled(true);
 		        analysis.setEnabled(true);
+		        prediction.setEnabled(true);
+
 		     }
 				
 			}
@@ -209,13 +237,16 @@ public void calculateWinnings() {
 	
 	
 	 
-	   if(matches.size() > 0)
-	   matches.clear();
-	   
-	   // Αν τo αντίστοιχο checkbox είναι επιλεγμένο, πρόσθεσε τον αγώνα στη νικήτρια στήλη
+	   if(matches.size() > 0) {
+	      matches.clear();
+	      matches_finished.clear();
+	   }
+	   // if match checkbox is checked, then add it to the winnings 8.
 	   for(int i=0; i<30; i++){
 		   if(matches_check_checkboxes[i].isSelected() == true)
 			   matches.add(i+1);
+		   if(matches_finished_checkboxes[i].isSelected() == true)
+			   matches_finished.add(i+1);
 	   }
 	   
 	   ArrayList<ArrayList<Integer>> csv_array = new  ArrayList<ArrayList<Integer>>();
@@ -226,52 +257,113 @@ public void calculateWinnings() {
 		int categ1 = 0;
 		int categ2 = 0;
 		int categ3 = 0;
+		boolean b;
 		
 		for(int j=0; j<csv_array.size(); j++){
-			int sum_right = 0;
-			for(int k=0; k<matches.size(); k++){
+			 int sum_right = 0;
+			 int sum_finished = 0;
+			 
+			 for(int k=0; k<matches.size(); k++){
 				if(csv_array.get(j).contains(matches.get(k)))
 						sum_right = sum_right + 1;
-			}
-			
-			if(sum_right == matches.size()-2) {
 				
-				   if(analysis.isSelected())
-				   showAnalysis(j,sum_right,csv_array);
-				   
-				   categ3 = categ3 + 1;
-			}
-			
-			if(sum_right == matches.size()-1) {
-				
-				   if(analysis.isSelected())
-					   
-					   showAnalysis(j,sum_right,csv_array);
-					   
-				   categ2 = categ2 + 1;
-			}
+			    }
 			 
+			 for(int k=0; k<matches_finished.size(); k++){
+					if(csv_array.get(j).contains(matches_finished.get(k)))
+						sum_finished = sum_finished + 1;
+					
+				    }
 			
-			if(sum_right == matches.size()) {
+			 if(!prediction.isSelected()) {
+				 
+				 b = false;
+				 
+			      if(sum_right == matches.size()-2) {
 				
-				  if(analysis.isSelected())
-					  
-					 showAnalysis(j,sum_right,csv_array);
-			   
-				  
-				     categ1 = categ1 + 1;
+				    if(analysis.isSelected())
+				    showAnalysis(j,sum_right,csv_array,b);
+				   
+				    categ3 = categ3 + 1;
+			         }
 			
-			}
+					if(sum_right == matches.size()-1) {
+						
+						   if(analysis.isSelected())
+							   
+							   showAnalysis(j,sum_right,csv_array,b);
+							   
+						   categ2 = categ2 + 1;
+					 }
+					 
+					
+					if(sum_right == matches.size()) {
+						
+						  if(analysis.isSelected())
+							  
+							 showAnalysis(j,sum_right,csv_array,b);
+					   
+						  
+						     categ1 = categ1 + 1;
+					
+					 }
 	    
-	    		
+			 }
+			 
+			 else {  // If checkbox 'prediction' is selected
+				 
+				 b = true;
+
+			      if((8 - matches.size() + sum_right) == 6 && (8 - sum_finished) > (8 - matches.size() - 1)) {
+				
+				    if(analysis.isSelected())
+				    showAnalysis(j,6,csv_array,b);
+				   
+				    categ3 = categ3 + 1;
+			         }
+			
+					if((8 - matches.size() + sum_right) == 7 && (8 - sum_finished) > (8 - matches.size() - 1)) {
+						
+						   if(analysis.isSelected())
+							   
+							   showAnalysis(j,7,csv_array,b);
+							   
+						   categ2 = categ2 + 1;
+					 }
+					 
+					
+					if((8 - matches.size() + sum_right) == 8 && (8 - sum_finished) > (8 - matches.size() - 1)) {
+						
+						  if(analysis.isSelected())
+							  
+							 showAnalysis(j,8,csv_array,b);
+					   
+						  
+						     categ1 = categ1 + 1;
+					
+					 }
+	    
+			
+				 
+			 }
+				 
+				 
 					
 		}
 		
+		String str ="";
+		
+    	if(!prediction.isSelected()) {
+		    str = "<html>There are <br>" + categ1 + " columns with " + matches.size()   + " right predicted, <br>" +
+				                              categ2 + " columns with " + (matches.size()-1) + " right predicted, <br>" +
+				                              categ3 + " columns with " + (matches.size()-2) + " right predicted. <html>";
+    	}
+    	else   {
+    		     str = "<html>Predictions : <br>" + categ1 + " columns with 8 right predicted, <br>" +
+                     categ2 + " columns with 7 right predicted, <br>" +
+                     categ3 + " columns with 6 right predicted. <html>";
+    	}
     	
-		String str = "<html>There are <br>" + categ1 + " columns with " + matches.size()   + " right predicted, <br>" +
-				                      categ2 + " columns with " + (matches.size()-1) + " right predicted, <br>" +
-				                      categ3 + " columns with " + (matches.size()-2) + " right predicted. <html>";
-	
 	   Message m = new Message("Success", str, "Info");
 	   m.show();
 	   
@@ -320,7 +412,7 @@ String[] row = null;
 	while((row = csvReader.readNext()) != null) {
 	
 		
-		// ArrayList για αποθήκευση κάθε γραμμής του csv
+		// Saving csv lines one by one
 	   	
 	   	ArrayList<Integer> csv_line = new ArrayList<Integer>();
 	   	
@@ -354,11 +446,21 @@ String[] row = null;
 	
 }
 
-public void showAnalysis(int row, int rightChoises, ArrayList<ArrayList<Integer>> arr){
+public void showAnalysis(int row, int rightChoises, ArrayList<ArrayList<Integer>> arr, boolean pred){
 	
+	    String str = "";
+	    
+	    if(!pred) {
 	
-		String str = "<html>There are " + rightChoises + " right in column " + (row+1) + " :<br>" + arr.get(row).toString().substring(1, arr.get(row).toString().length()-1) + "</html>";
+		str = "<html>There are " + rightChoises + " right in column " + (row+1) + " :<br>" + arr.get(row).toString().substring(1, arr.get(row).toString().length()-1) + "</html>";
 		
+	    }
+	    
+	    else
+	    	
+			str = "<html>Possible " + rightChoises + " right in column " + (row+1) + " :<br>" + arr.get(row).toString().substring(1, arr.get(row).toString().length()-1) + "</html>";
+
+	    	
 		Message m = new Message("Success", str,"Info");
 		
 		m.show();
@@ -374,19 +476,39 @@ public void showAnalysis(int row, int rightChoises, ArrayList<ArrayList<Integer>
 		int index = 0;
 		Object source = e.getItemSelectable();
 		
+		String selected = "";
 		
 		for(int i=0; i<30; i++) {
 			if(source == matches_check_checkboxes[i]) {
 				index = i;
+				selected = "winning_match";
+				break;
+		 }
+			if(source == matches_finished_checkboxes[i]) {
+				index = i;
+				selected = "match_finished";
 				break;
 		 }
 		}
+		
+		
+	if(selected.equals("winning_match")) {
 		if(e.getStateChange() == ItemEvent.DESELECTED)
 			matches_check_checkboxes[index].setForeground(Color.black);
 		else
 			if(e.getStateChange() == ItemEvent.SELECTED)
 				matches_check_checkboxes[index].setForeground(Color.red);
+	}
+	
+	else
 		
+		if(selected.equals("match_finished")) {
+			if(e.getStateChange() == ItemEvent.DESELECTED)
+				matches_finished_checkboxes[index].setForeground(Color.black);
+			else
+				if(e.getStateChange() == ItemEvent.SELECTED)
+					matches_finished_checkboxes[index].setForeground(Color.red);
+		}
 		
 	}
 	
