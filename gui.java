@@ -245,6 +245,71 @@ public class gui extends JFrame implements Printable, ItemListener{
 	   
 
 	   
+btnNewSystem.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e){
+    	
+    	systima = new Systima();
+    	btnLoadCoupon.setEnabled(true);
+    	btnNewSystem.setEnabled(false);
+    	btnAll.setEnabled(true);
+    	btnNone.setEnabled(true);
+    	btnDummyCoupon.setEnabled(true);
+    	btnEndOfSelection.setEnabled(true);
+    	
+
+    	jtb.setEnabledAt(1, false);
+     	jtb.setEnabledAt(2, false);
+     	
+     	 for(int i = 0; i<30; i++) {
+			   matches_checkboxes[i].setEnabled(true);
+			   if(matches_checkboxes[i].isSelected()) {
+				   matches_checkboxes[i].setForeground(Color.RED);
+				   systima.getMatches().add(i+1);
+			   }
+			   else
+				   matches_checkboxes[i].setForeground(Color.BLACK);
+				   
+		   }
+     	 
+     	 
+     	 
+     	lblSelectedMatches.setText("Selected matches : " + systima.getMatches().size());
+     	
+        for(int i=0; i<9; i++) {
+			   
+			  oddeven_checkboxes[i].setSelected(false);
+              lowhigh_checkboxes[i].setSelected(false);
+              
+              if(i < 5)
+              symmetry_checkboxes[i].setSelected(false);
+              
+              if(i < 8) {
+              endings_checkboxes[i].setSelected(false);
+              neighbours_checkboxes[i].setSelected(false);
+			  transitions_checkboxes[i].setSelected(false);
+              }
+        }
+        
+        txtLimUp.setText("0");
+        txtLimDown.setText("0");
+     	
+        txtOriaErrorsFrom.setText("0");
+        txtOriaErrorsTo.setText("0");
+        
+        DefaultTableModel model = (DefaultTableModel) tblSums.getModel();
+        model.setRowCount(0);
+        
+     	pnlBasicColumns.removeAll();
+    	
+     	
+     	
+    }
+}
+
+);
+
+
+	   
  btnAll.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e){
 			   
@@ -348,7 +413,7 @@ all5.addActionListener(new ActionListener() {
 			   
 			   for(int i=0; i<8; i++){
 				  neighbours_checkboxes[i].setSelected(true);
-		
+				  
 			   }
 			   
 		   }
@@ -404,7 +469,8 @@ all6.addActionListener(new ActionListener() {
 				   txtMinSum.setToolTipText("Min :" + min);
 				   txtMaxSum.setToolTipText("Max :" + max);
 				   
-				  
+				   txtMinSum.setText("" + min);
+				   txtMaxSum.setText("" + max);
 				   
 				   saveFullSystemToDisk(); //Save all columns to disk
                    
@@ -423,6 +489,8 @@ all6.addActionListener(new ActionListener() {
 				   }
 				   
 				   btnLoadCoupon.setEnabled(false);
+				   
+				   btnNewSystem.setEnabled(true);
 				 
 				   btnAll.setEnabled(false);
 				
@@ -431,6 +499,8 @@ all6.addActionListener(new ActionListener() {
 				   btnEndOfSelection.setEnabled(false);
 				
 				   btnDummyCoupon.setEnabled(false);
+				   
+				   
 				
 				   
 				   for(int i=0; i<pnlBasicColumns.getComponentCount(); i++) {
@@ -1403,7 +1473,7 @@ public void addComp3toPanelAgones(){
 	 btnLoadCoupon = new JGradientButton(180,32,13,"Load competition","Downloads competition from internet page",156,142,175);
 	 pnlMatches.add(btnLoadCoupon,"pos 750 65");
 	 
-	 btnNewSystem = new JGradientButton(180,32,13,"New System","Starts a new system",156,142,175);
+	 btnNewSystem = new JGradientButton(180,32,13,"New system","Starts a new system",156,142,175);
 	 pnlMatches.add(btnNewSystem,"pos 750 105");
 	 
 	 btnAll = new JGradientButton(180,32,13,"Select all","Selects all matches",156,142,175);
