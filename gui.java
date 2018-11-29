@@ -93,9 +93,9 @@ public class gui extends JFrame implements Printable, ItemListener{
    private JButton btnAddSum = new JGradientButton("Add sum");
    private JButton btnDelSum = new JGradientButton("Delete sum");
    
-   private JGradientButton btnGroupUp = new JGradientButton(30, 20, 13,"<html><b><center> + </center></b></html>", "Selects all choises",156,142,175);
-   private JGradientButton btnGroupDown = new JGradientButton(30, 20, 13,"<html><b><center> - </center></b></html>", "Selects all choises",156,142,175);
-   private JGradientButton btnAddGroupLimits = new JGradientButton(130, 30, 13,"<html><b><center>Add group limits</center></b></html>", "Selects all choises",156,142,175);
+   private JGradientButton btnGroupUp = new JGradientButton(30, 20, 13,"<html><b><center> + </center></b></html>", "One group up",156,142,175);
+   private JGradientButton btnGroupDown = new JGradientButton(30, 20, 13,"<html><b><center> - </center></b></html>", "One group down",156,142,175);
+   private JGradientButton btnAddGroupLimits = new JGradientButton(130, 30, 13,"<html><b><center>Add group limits</center></b></html>", "Adds current group limits",156,142,175);
 
    private JTable tblBasicColumns = new JTable();
    private JTable tblMatches = new JTable();
@@ -1400,7 +1400,7 @@ public void addComp3toPanelAgones(){
 	 lblSelectedMatches.setText("Selected matches : 0");
 	 lblSelectedMatches.setForeground(new Color(0,128,0));
 	 
-	 btnLoadCoupon = new JGradientButton(180,32,13,"Load coupon","Downloads coupon from internet page",156,142,175);
+	 btnLoadCoupon = new JGradientButton(180,32,13,"Load competition","Downloads competition from internet page",156,142,175);
 	 pnlMatches.add(btnLoadCoupon,"pos 750 65");
 	 
 	 btnNewSystem = new JGradientButton(180,32,13,"New System","Starts a new system",156,142,175);
@@ -1551,7 +1551,7 @@ public void addComp1toPanelStats(){
 	JLabel jl = new JLabel("<html><U> Odd - Even </U></html>");
 	 jl.setFont(new Font("Arial", Font.BOLD, 13));
 	 jl.setForeground(new Color(0,128,0));
-	 this.pnlStats.add(jl,"pos 25 30");
+	 this.pnlStats.add(jl,"pos 35 30");
 	 
 	   JPanel jpl = new JPanel();
 	   jpl.setPreferredSize(new Dimension(80,290));
@@ -1574,7 +1574,7 @@ public void addComp2toPanelStats(){
 	JLabel jl = new JLabel("<html><U> Low - High </U></html>");
 	 jl.setFont(new Font("Arial", Font.BOLD, 13));
 	 jl.setForeground(new Color(0,128,0));
-	 this.pnlStats.add(jl,"pos 125 30");
+	 this.pnlStats.add(jl,"pos 135 30");
 	 
 	   JPanel jpl = new JPanel();
 	   jpl.setMinimumSize(new Dimension(80,290));
@@ -1941,10 +1941,10 @@ public void addComp3toPanelKontres() {
       		
       		   }
      	
-        for(int k = 0; k < 9 ; k++){  // Αρχικοποίηση των checkboxes που είναι τα όρια
-                                      // κοντρών . Μη επιλέξιμα στην αρχή.
+        for(int k = 0; k < 9 ; k++){  //
+        	
 
-        basiccolumns_value_checkboxes[k].setEnabled(false) ;
+            basiccolumns_value_checkboxes[k].setEnabled(false) ;
 
         }
      	
@@ -2638,7 +2638,7 @@ public void itemStateChanged(ItemEvent e) {
 		}
 		
 		
-		if(jtb.isEnabledAt(2)) {  // Αν έχει ενεργοποιηθεί η καρτέλα Κόντρες
+		if(jtb.isEnabledAt(2)) {  
 			
 			for(int i=0; i<agoneskon_checkboxes.length; i++) {
 				if(e.getSource().equals(agoneskon_checkboxes[i])) {
