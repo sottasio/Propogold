@@ -31,6 +31,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -78,12 +79,10 @@ public class gui extends JFrame implements Printable, ItemListener{
    private JCheckBox agoneskon_checkboxes[];
    private JCheckBox basiccolumns_value_checkboxes[];
    
-   private JGradientButton btnLoadCoupon;
    private JGradientButton btnNewSystem;
    private JGradientButton btnAll;
    private JGradientButton btnNone;
    private JGradientButton btnEndOfSelection;
-   private JGradientButton btnDummyCoupon;
    
    private JGradientButton all1, all2, all3, all4, all5, all6;
 
@@ -109,6 +108,7 @@ public class gui extends JFrame implements Printable, ItemListener{
    
    private ArrayList<String> hometeams;
    private ArrayList<String> awayteams;
+   private ArrayList<String> scores;
    
    private JTextField txtMinSum = new JTextField(3);
    private JTextField txtMaxSum = new JTextField(3);
@@ -129,6 +129,8 @@ public class gui extends JFrame implements Printable, ItemListener{
    
    private JTextField txtOriaErrorsFrom = new JTextField("0");
    private JTextField txtOriaErrorsTo = new JTextField("0");
+   
+   private JComboBox<String> comboCompetitions = new JComboBox<String>();
    
    
    public gui() {
@@ -187,8 +189,14 @@ public class gui extends JFrame implements Printable, ItemListener{
 	   pnlOperations.add(btnConditionsToFile, "pos 100 200");
 	   
 	   
-	   for(int i=0; i<pnlOperations.getComponentCount(); i++) {
-			Component co = pnlOperations.getComponent(i);
+	   Component[] componentList = pnlOperations.getComponents();
+
+	   for(int i=0; i<componentList.length; i++) {
+		   
+		   Component co = componentList[i];
+		   
+		   if(co instanceof JGradientButton)
+			
 				addPointerHand(co);
 		}
 
@@ -204,11 +212,16 @@ public class gui extends JFrame implements Printable, ItemListener{
 			
 		}
 		
-		 for(int i=0; i<pnlMatches.getComponentCount(); i++) {
-			 Component co = pnlMatches.getComponent(i);
-			 addPointerHand(co);
-		 }
-		
+		 componentList = pnlMatches.getComponents();
+
+		   for(int i=0; i<componentList.length; i++) {
+			   
+			   Component co = componentList[i];
+			   
+			   if(co instanceof JGradientButton)
+				
+					addPointerHand(co);
+			}
 		
 
 	   addComp1toPanelStats();
@@ -234,14 +247,21 @@ public class gui extends JFrame implements Printable, ItemListener{
 			transitions_checkboxes[i].addItemListener(this);
 		}
 	   
-	   for(int i=0; i<pnlStats.getComponentCount(); i++) {
-			 Component co = pnlStats.getComponent(i);
-			 addPointerHand(co);
-		 }
+	    componentList = pnlStats.getComponents();
+
+	   for(int i=0; i<componentList.length; i++) {
+		   
+		   Component co = componentList[i];
+		   
+		   if(co instanceof JGradientButton)
+			
+				addPointerHand(co);
+		}
 	   
 
 	   hometeams = new ArrayList<>();   
 	   awayteams = new ArrayList<>();
+	   scores = new ArrayList<>();
 	   
 
 	   
@@ -249,11 +269,9 @@ btnNewSystem.addActionListener(new ActionListener() {
     public void actionPerformed(ActionEvent e){
     	
     	systima = new Systima();
-    	btnLoadCoupon.setEnabled(true);
     	btnNewSystem.setEnabled(false);
     	btnAll.setEnabled(true);
     	btnNone.setEnabled(true);
-    	btnDummyCoupon.setEnabled(true);
     	btnEndOfSelection.setEnabled(true);
     	
 
@@ -300,7 +318,7 @@ btnNewSystem.addActionListener(new ActionListener() {
         model.setRowCount(0);
         
      	pnlBasicColumns.removeAll();
-    	
+     
      	
      	
     }
@@ -323,7 +341,8 @@ btnNewSystem.addActionListener(new ActionListener() {
 		    	int agones = systima.getMatches().size();
 			   
 			   lblSelectedMatches.setText("Selected matches : " + agones);
-		    	
+		    
+			   if(hometeams.size() > 0) // if a competition is loaded
 			   btnEndOfSelection.setEnabled(true);
 	   
 		   }
@@ -473,9 +492,7 @@ all6.addActionListener(new ActionListener() {
 				   txtMaxSum.setText("" + max);
 				   
 				   saveFullSystemToDisk(); //Save all columns to disk
-                   
-                   
-                    
+
 				   systima.getGroups().add(new GroupBC(1)); // Add a new BC Group with id = 1
 				    
 				   
@@ -488,7 +505,7 @@ all6.addActionListener(new ActionListener() {
 						   
 				   }
 				   
-				   btnLoadCoupon.setEnabled(false);
+				   comboCompetitions.setEnabled(false);
 				   
 				   btnNewSystem.setEnabled(true);
 				 
@@ -497,14 +514,16 @@ all6.addActionListener(new ActionListener() {
 				   btnNone.setEnabled(false);
 				
 				   btnEndOfSelection.setEnabled(false);
-				
-				   btnDummyCoupon.setEnabled(false);
+	
 				   
-				   
-				
-				   
-				   for(int i=0; i<pnlBasicColumns.getComponentCount(); i++) {
-						Component co = pnlBasicColumns.getComponent(i);
+				   Component[] componentList = pnlBasicColumns.getComponents();
+
+				   for(int i=0; i<componentList.length; i++) {
+					   
+					   Component co = componentList[i];
+					   
+					   if(co instanceof JGradientButton)
+						
 							addPointerHand(co);
 					}
 				   
@@ -519,55 +538,7 @@ all6.addActionListener(new ActionListener() {
 	   });
  
  
-	   
- btnDummyCoupon.addActionListener(new ActionListener() {
-	 
-	    public void actionPerformed(ActionEvent e){
-	    	
-	    	if(hometeams.size() > 0) {
-	    	
-	    	hometeams.clear();
-			awayteams.clear();
-			
-	    	}
-	    	
-	    	DefaultTableModel tableModel = (DefaultTableModel) tblMatches.getModel();
-	    	tableModel.setRowCount(0); // Empty the table
 
-           for(int i=0; i<30; i++){
-        	   
-        	    int a = i + 1 ;
-		 		
-		 		String b = "Team " + (i * 2 + 1);
-		 		
-		 		String c = "Team " + (i * 2 + 2);
-		 	
-	
-		    	Object[] row2 = {a,b,c};
-		    	tableModel.addRow(row2);
-		 	
-		       hometeams.add(b);
-		       awayteams.add(c);
-		       
-		       
-		 	
-		 	}
-           
-           if(countAgones() > 7) {
-        	   
-        	   btnEndOfSelection.setEnabled(true);
-   
-           }
-           
-           
-           btnDummyCoupon.setEnabled(false);
-	    	
-	    }
- });
- 
- 
- 
- 
 btnGroupUp.addActionListener(new ActionListener() {
 	 
 	 public void actionPerformed(ActionEvent e){
@@ -1199,139 +1170,6 @@ btnAddGroupLimits.addActionListener(new ActionListener() {
 
 
 
-btnLoadCoupon.addActionListener(new ActionListener() {
-   
-	public void actionPerformed(ActionEvent e){
-    	
-    	
-    	
-    	DefaultTableModel tableModel = (DefaultTableModel) tblMatches.getModel();
-    	tableModel.setRowCount(0); // Empty the table
-    	
-    	
-    	
-    	String kouponi = JOptionPane.showInputDialog(null,"<html>Please insert coupon id nr. <br> Nr 985 is for 24/11/2018,<br> 986 for 01/12/2018 etc</html>" , "Import coupon",JOptionPane.INFORMATION_MESSAGE);
-    	
-    	if(kouponi!= null) {
-	   
-        try {
-        	
-        	
-        	
-        	String basicurl = "https://api.opap.gr/program/v1.0/5105/";
-        	
-        	String url = basicurl + kouponi;
-        	
-			Document doc = Jsoup.connect(url)
-					      .userAgent("Mozilla")
-					      .ignoreContentType(true)
-					      .get();
-			
-			String kouponi2 = doc.text().toString() ;
-			
-			JSONObject agonesJsonObject;
-			
-			String startdate = "";
-        	String enddate = "";
-			
-			try {
-				
-				if(hometeams.size() > 0) {
-				
-				hometeams.clear();
-				awayteams.clear();
-				
-				}
-				
-				agonesJsonObject = (JSONObject) JSONValue.parseWithException(kouponi2);
-				
-				JSONArray agonesArray = (JSONArray) agonesJsonObject.get("matchXEvents");
-				
-                      for(int i=0; i<30; i++){
-					
-					        JSONObject home = (JSONObject) agonesArray.get(i);
-					
-				          	String ht = (String) home.get("teamHome");
-				         	String at = (String) home.get("teamAway");
-					
-				        	hometeams.add(ht);
-				        	awayteams.add(at);
-					
-					         }
-				
-			               
-                      
-				            startdate = agonesJsonObject.get("visualStartDate").toString();
-				            
-				            enddate = agonesJsonObject.get("visualEndDate").toString();
-				      
-				
-		
-				
-				
-				
-			} catch (ParseException e1) {
-				
-				e1.printStackTrace();
-			}
-		
-			
-			
-			if(kouponi2.length() > 100) {  // If successfully downloaded ...
-			
-				
-				
-			
-			
-			tableModel.setRowCount(0); // Empty the table
-			
-		 	for(int i=0; i<hometeams.size(); i++){
-		 		
-
-		 		int a = i + 1;
-		 		String b = hometeams.get(i).toString();
-		 		String c = awayteams.get(i).toString();
-		 	
-	
-		    	Object[] row = {a,b,c};
-		    	tableModel.addRow(row);
-		    	
-		    	
-		
-		 	
-		 	}
-		 	
-		 	if(countAgones() > 7)
-	    		btnEndOfSelection.setEnabled(true);
-	 	
-		 	    btnDummyCoupon.setEnabled(true);
-		 	
-		 	
-			JOptionPane.showMessageDialog(null, "Coupon : \n" + startdate + " till \n"  + enddate, "Success",
-    		        JOptionPane.INFORMATION_MESSAGE);
-		 	
-			}
-			
-         
-		 		
-			
-		} catch (IOException e1) {
-			
-			JOptionPane.showMessageDialog(null, "No connection with Propogoal page", "Error",
-    		        JOptionPane.ERROR_MESSAGE);	
-    		
-		}	
-    	
-    }
-    	else
-    		
-    		JOptionPane.showMessageDialog(null, "Please insert a coupon id!", "Error",
-    		        JOptionPane.INFORMATION_MESSAGE);	
-    		
-
-	   
-   }
-}); 
 
 btnView.addActionListener(new ActionListener() {
 	public void actionPerformed(ActionEvent e){
@@ -1389,7 +1227,6 @@ btnMakeVariable.addActionListener(new ActionListener() {
 		
 	}
 });
-	
 
  
    }
@@ -1421,8 +1258,6 @@ public int countAgones() {
 	 return sum;
 }
 
-   
-
 
 
 public void addComp1toPanelAgones(){
@@ -1430,8 +1265,65 @@ public void addComp1toPanelAgones(){
 	 JLabel jl = new JLabel("<html><U>Select matches</U></html>");
 	 jl.setFont(new Font("Arial", Font.BOLD, 13));
 	 jl.setForeground(new Color(0,128,0));
-	 this.pnlMatches.add(jl,"pos 60 40");
+	 pnlMatches.add(jl,"pos 60 40");
+     
+	 pnlMatches.add(comboCompetitions,"pos 380 30");
+	 comboCompetitions.addItem("Select competition");
+	 comboCompetitions.addItem("Dummy competition");
+	 getCompetitions();
+	 comboCompetitions.addItemListener(this);
+	 
+
 }
+
+
+public void getCompetitions() {
+	
+
+
+	 String url = "https://api.opap.gr/program/v1.0/5105/draw-date/2018-01-01/2019-12-31";
+     String kouponi = "";
+ 	
+		Document doc = null;
+		try {
+			doc = Jsoup.connect(url)
+					      .userAgent("Mozilla")
+					      .ignoreContentType(true)
+					      .get();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		
+		kouponi = doc.text().toString();
+		
+		JSONArray dates = null;
+		try {
+			dates = (JSONArray) JSONValue.parseWithException(kouponi);
+		} catch (ParseException e) {
+			
+			e.printStackTrace();
+		}
+  
+		
+     for (Object o : dates)
+     {
+       JSONObject competition = (JSONObject) o;
+
+       Long drawid = (Long) competition.get("drawId");
+
+       String sd = (String) competition.get("visualStartDate");
+       
+       String ed = (String) competition.get("visualEndDate");
+
+       comboCompetitions.addItem(drawid + " : " + sd + " - " + ed);
+     }
+   
+   
+	
+	
+}
+
 
 public void addComp2toPanelAgones(){
 	
@@ -1445,8 +1337,8 @@ public void addComp2toPanelAgones(){
 	  
 	for(int i=0; i<30; i++){
 		   
-		   this.matches_checkboxes[i] = new JCheckBox(i+1 + ".");
-		   this.matches_checkboxes[i].setFont(new Font("Arial",Font.BOLD, 12));
+		   matches_checkboxes[i] = new JCheckBox(i+1 + ".");
+		   matches_checkboxes[i].setFont(new Font("Arial",Font.BOLD, 12));
 		   
 			  int col = i%3;
 			  int seira = (int)(i/3) + 1;
@@ -1455,7 +1347,7 @@ public void addComp2toPanelAgones(){
 			  
 			  String cell = "pos " + f + " " + g + "";
 			
-			  jpl.add(this.matches_checkboxes[i],cell);
+			  jpl.add(matches_checkboxes[i],cell);
 			 
 		   }
 	
@@ -1470,25 +1362,20 @@ public void addComp3toPanelAgones(){
 	 lblSelectedMatches.setText("Selected matches : 0");
 	 lblSelectedMatches.setForeground(new Color(0,128,0));
 	 
-	 btnLoadCoupon = new JGradientButton(180,32,13,"Load competition","Downloads competition from internet page",156,142,175);
-	 pnlMatches.add(btnLoadCoupon,"pos 750 65");
 	 
 	 btnNewSystem = new JGradientButton(180,32,13,"New system","Starts a new system",156,142,175);
-	 pnlMatches.add(btnNewSystem,"pos 750 105");
+	 btnNewSystem.setEnabled(false);
+	 pnlMatches.add(btnNewSystem,"pos 800 105");
 	 
 	 btnAll = new JGradientButton(180,32,13,"Select all","Selects all matches",156,142,175);
-	 pnlMatches.add(btnAll, "pos 750 145");
+	 pnlMatches.add(btnAll, "pos 800 145");
 	 
 	 btnNone = new JGradientButton(180,32,13,"Deselect all","Deselects all matches",156,142,175);
-	 pnlMatches.add(btnNone, "pos 750 185");
+	 pnlMatches.add(btnNone, "pos 800 185");
 	 
 	 btnEndOfSelection = new JGradientButton(180,32,13,"End of selection","End of selection - no matches can be selected",156,142,175);
-	 pnlMatches.add(btnEndOfSelection, "pos 750 225");
-	 
-	 btnDummyCoupon = new JGradientButton(180,32,13,"Dummy coupon","Coupon with fake teams",156,142,175);
-	 pnlMatches.add(btnDummyCoupon, "pos 750 265");
-	 
-	 
+	 pnlMatches.add(btnEndOfSelection, "pos 800 225");
+
 		
 	 btnEndOfSelection.setEnabled(false);
 	 
@@ -1498,7 +1385,7 @@ public void addComp3toPanelAgones(){
 	 ppgsite.setFont(new Font("Arial",Font.BOLD, 15));
 	 ppgsite.setForeground(Color.blue);
 	 ppgsite.setBackground(Color.GRAY);
-	 pnlMatches.add(ppgsite, "pos 730 550");
+	 pnlMatches.add(ppgsite, "pos 780 550");
 	 ppgsite.setOpaque(true);
 	 addPointerHand(ppgsite);
 	 
@@ -1577,12 +1464,13 @@ public void addComp3toPanelAgones(){
 
 public void addComp4toPanelAgones(){
 
-	   JScrollPane js = new JScrollPane(tblMatches);
-	   js.setPreferredSize(new Dimension(452,563));
-	   pnlMatches.add(js,"pos 270 40");
+	   JScrollPane js = new JScrollPane(tblMatches,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+	   js.setPreferredSize(new Dimension(521,510));
+	   pnlMatches.add(js,"pos 240 90");
 	   
 	   
-	   String[] columns = {"Id","Home","Away"};
+	   
+	   String[] columns = {"Id","Home","Away","Score"};
 	
 	DefaultTableModel tableModel = new DefaultTableModel(columns, 0){  
 	      /**
@@ -1598,16 +1486,17 @@ public void addComp4toPanelAgones(){
 	 	
 	   tblMatches.setModel(tableModel);
 	   tblMatches.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-       tblMatches.getColumnModel().getColumn(0).setMaxWidth(50);
+       tblMatches.getColumnModel().getColumn(0).setMaxWidth(40);
 	   tblMatches.getColumnModel().getColumn(1).setMinWidth(200);
 	   tblMatches.getColumnModel().getColumn(2).setMinWidth(200);
+	   tblMatches.getColumnModel().getColumn(3).setMinWidth(40);
 	     
 	 	tblMatches.setBackground(new Color(214,233,235));
-		 	tblMatches.setOpaque(true);
+		tblMatches.setOpaque(true);
 	    
 	     DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 	     centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
-	     for(int x=0;x<3;x++){
+	     for(int x=0;x<4;x++){
 	    	tblMatches.getColumnModel().getColumn(x).setCellRenderer( centerRenderer );
 	        }
 	     
@@ -1621,7 +1510,7 @@ public void addComp1toPanelStats(){
 	JLabel jl = new JLabel("<html><U> Odd - Even </U></html>");
 	 jl.setFont(new Font("Arial", Font.BOLD, 13));
 	 jl.setForeground(new Color(0,128,0));
-	 this.pnlStats.add(jl,"pos 35 30");
+	 pnlStats.add(jl,"pos 35 30");
 	 
 	   JPanel jpl = new JPanel();
 	   jpl.setPreferredSize(new Dimension(80,290));
@@ -1644,13 +1533,13 @@ public void addComp2toPanelStats(){
 	JLabel jl = new JLabel("<html><U> Low - High </U></html>");
 	 jl.setFont(new Font("Arial", Font.BOLD, 13));
 	 jl.setForeground(new Color(0,128,0));
-	 this.pnlStats.add(jl,"pos 135 30");
+	 pnlStats.add(jl,"pos 135 30");
 	 
 	   JPanel jpl = new JPanel();
 	   jpl.setMinimumSize(new Dimension(80,290));
 	   jpl.setMaximumSize(new Dimension(80,290));
 	   jpl.setLayout(new MigLayout());
-	   this.pnlStats.add(jpl,"pos 135 60");
+	   pnlStats.add(jpl,"pos 135 60");
 	   jpl.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 	 
 	   for(int i=0; i<9; i++){
@@ -1672,13 +1561,13 @@ public void addComp3toPanelStats(){
 	JLabel jl = new JLabel("<html><U> Symmetrics </U></html>");
 	jl.setFont(new Font("Arial", Font.BOLD, 13));
 	 jl.setForeground(new Color(0,128,0));
-	 this.pnlStats.add(jl,"pos 245 30");
+	 pnlStats.add(jl,"pos 245 30");
 	 
 	   JPanel jpl = new JPanel();
 	   jpl.setMinimumSize(new Dimension(80,290));
 	   jpl.setMaximumSize(new Dimension(80,290));
 	   jpl.setLayout(new MigLayout());
-	   this.pnlStats.add(jpl,"pos 245 60");
+	   pnlStats.add(jpl,"pos 245 60");
 	   jpl.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 	 
 	   for(int i=0; i<5; i++){
@@ -1702,13 +1591,13 @@ public void addComp4toPanelStats(){
 	JLabel jl = new JLabel("<html><U> Endings </U></html>");
 	jl.setFont(new Font("Arial", Font.BOLD, 13));
 	 jl.setForeground(new Color(0,128,0));
-	 this.pnlStats.add(jl,"pos 355 30");
+	 pnlStats.add(jl,"pos 355 30");
 	 
 	   JPanel jpl = new JPanel();
 	   jpl.setMinimumSize(new Dimension(80,290));
 	   jpl.setMaximumSize(new Dimension(80,290));
 	   jpl.setLayout(new MigLayout());
-	   this.pnlStats.add(jpl,"pos 345 60");
+	   pnlStats.add(jpl,"pos 345 60");
 	   jpl.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 	 
 	   for(int i=0; i<8; i++){
@@ -1728,13 +1617,13 @@ public void addComp5toPanelStats(){
 	JLabel jl = new JLabel("<html><U> Neighbours </U></html>");
 	jl.setFont(new Font("Arial", Font.BOLD, 13));
 	 jl.setForeground(new Color(0,128,0));
-	 this.pnlStats.add(jl,"pos 455 30");
+	 pnlStats.add(jl,"pos 455 30");
 	 
 	   JPanel jpl = new JPanel();
 	   jpl.setMinimumSize(new Dimension(80,290));
 	   jpl.setMaximumSize(new Dimension(80,290));
 	   jpl.setLayout(new MigLayout());
-	   this.pnlStats.add(jpl,"pos 455 60");
+	   pnlStats.add(jpl,"pos 455 60");
 	   jpl.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 	 
 	   for(int i=0; i<8; i++){
@@ -1756,13 +1645,13 @@ public void addComp6toPanelStats(){
 	JLabel jl = new JLabel("<html><U> Odd-even transitions </U></html>");
 	jl.setFont(new Font("Arial", Font.BOLD, 13));
 	 jl.setForeground(new Color(0,128,0));
-	 this.pnlStats.add(jl,"pos 555 30");
+	 pnlStats.add(jl,"pos 555 30");
 	 
 	   JPanel jpl = new JPanel();
 	   jpl.setMinimumSize(new Dimension(80,290));
 	   jpl.setMaximumSize(new Dimension(80,290));
 	   jpl.setLayout(new MigLayout());
-	   this.pnlStats.add(jpl,"pos 565 60");
+	   pnlStats.add(jpl,"pos 565 60");
 	   jpl.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 	 
 	   for(int i=0; i<8; i++){
@@ -1784,7 +1673,7 @@ public void addComp7toPanelStats() {
 	JLabel jl = new JLabel("<html><u> Sum </u></html>");
 	jl.setFont(new Font("Arial", Font.BOLD, 13));
 	 jl.setForeground(new Color(0,128,0));
-	 this.pnlStats.add(jl,"pos 740 30");
+	 pnlStats.add(jl,"pos 740 30");
 	
 	   JPanel jpl = new JPanel();
 	   jpl.setMinimumSize(new Dimension(210,290));
@@ -1893,6 +1782,8 @@ public void addComp7toPanelStats() {
 	   
 }
 
+
+
 public void addComp1toPanelKontres(){
 	
 	   JScrollPane js = new JScrollPane(tblBasicColumnMatches);
@@ -1941,8 +1832,8 @@ public void addComp1toPanelKontres(){
 			 	        	String c = awayteams.get(i);
 			 	
 		
-			 	Object[] row2 = {a,b,c};
-			 	tableModel2.addRow(row2);
+						 	Object[] row2 = {a,b,c};
+						 	tableModel2.addRow(row2);
 			 	
 			 	
 			 	
@@ -1978,13 +1869,13 @@ public void addComp3toPanelKontres() {
 	   JLabel jl = new JLabel("<html><U> Limits </U></html>");
        jl.setFont(new Font("Arial", Font.BOLD, 13));
 	   jl.setForeground(new Color(0,128,0));
-	   this.pnlBasicColumns.add(jl,"pos 470 40");
+	   pnlBasicColumns.add(jl,"pos 470 40");
 	 
 	   JPanel jpl = new JPanel();
 	   jpl.setMinimumSize(new Dimension(80,220));
 	   jpl.setMaximumSize(new Dimension(80,220));
 	   jpl.setLayout(new MigLayout());
-	   this.pnlBasicColumns.add(jpl,"pos 450 60");
+	   pnlBasicColumns.add(jpl,"pos 450 60");
 	   jpl.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 	
 	
@@ -2126,10 +2017,16 @@ public void addComp5toPanelKontres() {
 	 pnlBasicColumns.add(compute, "pos 420 530");
 	 
 	 
-	 for(int i=0; i<jpl.getComponentCount(); i++) {
-		 Component co = jpl.getComponent(i);
-		 addPointerHand(co);
-	 }
+	 Component[] componentList = jpl.getComponents();
+
+	   for(int i=0; i<componentList.length; i++) {
+		   
+		   Component co = componentList[i];
+		   
+		   if(co instanceof JGradientButton)
+			
+				addPointerHand(co);
+		}
 	 
 	   
 compute.addActionListener(new ActionListener() {
@@ -2141,6 +2038,173 @@ compute.addActionListener(new ActionListener() {
 		    }
 		});
 	
+	
+}
+
+public void loadCompetition(String str) {
+	
+    
+	
+	String str1 = comboCompetitions.getSelectedItem().toString();
+	
+	if(!str1.equals("Dummy competition") && !str1.equals("Select competition")) {
+	
+	try {
+    	
+    	
+    	
+    	String basicurl = "https://api.opap.gr/program/v1.0/5105/";
+    	
+    	String url = basicurl + str;
+    	
+		Document doc = Jsoup.connect(url)
+				      .userAgent("Mozilla")
+				      .ignoreContentType(true)
+				      .get();
+		
+		String kouponi2 = doc.text().toString() ;
+		
+		JSONObject matchesJsonObject;
+		
+		
+		
+		try {
+			
+			if(hometeams.size() > 0) {
+			
+			hometeams.clear();
+			awayteams.clear();
+			scores.clear();
+			
+			}
+			
+			matchesJsonObject = (JSONObject) JSONValue.parseWithException(kouponi2);
+			
+			JSONArray agonesArray = (JSONArray) matchesJsonObject.get("matchXEvents");
+			
+                  for(int i=0; i<30; i++){
+				
+				        JSONObject jsobj = (JSONObject) agonesArray.get(i);
+				
+			          	String ht = (String) jsobj.get("teamHome");
+			         	String at = (String) jsobj.get("teamAway");
+			         	String sc = (String) jsobj.get("score");
+			         	
+			         	
+			         	
+			        	hometeams.add(ht);
+			        	awayteams.add(at);
+			            scores.add(sc);
+				
+				         }
+			
+		               
+                  
+			         
+			
+	
+			
+			
+			
+		} catch (ParseException e1) {
+			
+			e1.printStackTrace();
+		}
+	
+		
+		
+		if(kouponi2.length() > 100) {  // If successfully downloaded ...
+		
+			
+			
+			DefaultTableModel tableModel = (DefaultTableModel) tblMatches.getModel();
+	    	
+		
+		    tableModel.setRowCount(0); // Empty the table
+		
+	 	for(int i=0; i<hometeams.size(); i++){
+	 		
+
+	 		int a = i + 1;
+	 		String b = hometeams.get(i).toString();
+	 		String c = awayteams.get(i).toString();
+	 		String d = scores.get(i).toString();
+
+	    	Object[] row = {a,b,c,d};
+	    	tableModel.addRow(row);
+	    	
+	    	
+	
+	 	
+	 	}
+	 	
+	 	if(countAgones() > 7)
+    		btnEndOfSelection.setEnabled(true);
+
+		    JOptionPane.showMessageDialog(null, "Competition succesfully downloaded", "Success",
+		        JOptionPane.INFORMATION_MESSAGE);
+	 	
+		}
+		
+     
+	 		
+		
+	} catch (IOException e1) {
+		
+		JOptionPane.showMessageDialog(null, "No connection with Propogoal page", "Error",
+		        JOptionPane.ERROR_MESSAGE);	
+		
+	}
+	
+}
+
+    else
+	
+	     if(str1.equals("Dummy competition")) {
+		
+
+		    	
+		    	if(hometeams.size() > 0) {
+		    	
+		    	hometeams.clear();
+				awayteams.clear();
+				scores.clear();
+				
+		    	}
+		    	
+		    	DefaultTableModel tableModel = (DefaultTableModel) tblMatches.getModel();
+		    	tableModel.setRowCount(0); // Empty the table
+
+	           for(int i=0; i<30; i++){
+	        	   
+	        	    int a = i + 1 ;
+			 		
+			 		String b = "Team " + (i * 2 + 1);
+			 		
+			 		String c = "Team " + (i * 2 + 2);
+			 	
+			 		String d = " None";
+		
+			    	Object[] row2 = {a,b,c,d};
+			    	tableModel.addRow(row2);
+			 	
+			       hometeams.add(b);
+			       awayteams.add(c);
+			       scores.add(d);
+			       
+			       
+			 	
+			 	}
+	           
+	           if(countAgones() > 7) {
+	        	   
+	        	   btnEndOfSelection.setEnabled(true);
+	   
+	           }
+	           
+	
+		    
+	}
 	
 }
 
@@ -2600,6 +2664,8 @@ public static void main(String[] args) throws ParseException {
 		try {
 			UIManager.setLookAndFeel(
 					"com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+			
+		
 		} catch (ClassNotFoundException e) {
 			
 			e.printStackTrace();
@@ -2623,11 +2689,9 @@ public static void main(String[] args) throws ParseException {
         ppg.setResizable(false);
         ppg.setLocation(200, 50);
         ppg.setVisible(true);
-      
-		
-		  
         
-      
+        
+
         
         
 	}
@@ -2651,6 +2715,10 @@ public void itemStateChanged(ItemEvent e) {
 		int index = 0;
 		
 		String selected = "";
+		
+		if(e.getSource().equals(comboCompetitions))
+			
+			selected = "combobox";
 		
 		
 		for(int i=0; i<30; i++) {
@@ -2992,6 +3060,18 @@ public void itemStateChanged(ItemEvent e) {
         	
            
 		}
+	
+	   if(selected.equals("combobox")) {
+		   
+		   if(e.getStateChange() == ItemEvent.SELECTED) {
+		   
+		   String selected_compet = comboCompetitions.getSelectedItem().toString().substring(0, 4);
+
+			loadCompetition(selected_compet);
+			
+		   }
+			
+	   }
 		
 	}
 		    
