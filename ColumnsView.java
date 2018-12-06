@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -6,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,10 +20,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-
 import com.opencsv.CSVReader;
-
 import net.miginfocom.swing.MigLayout;
+
+
 
 public class ColumnsView extends BaseView{
 	
@@ -34,6 +36,7 @@ public class ColumnsView extends BaseView{
 	private JGradientButton btnClose;
 	private JGradientButton btnSelect;
 	private JGradientButton btnPrint;
+	private JGradientButton btnHisto;
 	private ArrayList<ArrayList<Integer>> stiles;
 	private JLabel lblFile;
 	private JLabel lblSumColumns;
@@ -47,6 +50,7 @@ public class ColumnsView extends BaseView{
 		btnClose = new JGradientButton(80, 35, 13,"Close", "Closes this window",156,142,175);
 		btnSelect = new JGradientButton(80, 35, 13,"Select", "Selects a column file",156,142,175);
 		btnPrint = new JGradientButton(80, 35, 13,"Print", "Prints a column file",156,142,175);
+		btnHisto = new JGradientButton(80, 35, 13,"Histo", "Shows a histogramm of number frequency",156,142,175);
 		lblFile = new JLabel("<html><b> File : </b><html> (None)");
 		lblSumColumns = new JLabel("<html><b> Columns : </b><html>");
 		
@@ -57,16 +61,18 @@ public class ColumnsView extends BaseView{
 		
 		   add(jpl);
 		
-		   JScrollPane js = new JScrollPane(tblView);
-		   js.setPreferredSize(new Dimension(300,350));
+		   JScrollPane js = new JScrollPane(tblView,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		   js.setPreferredSize(new Dimension(310,350));
 		   jpl.add(js,"pos 20 20");
-		   jpl.add(btnClose, "pos 340 150");
+		   jpl.add(btnClose, "pos 340 200");
+		   jpl.add(btnHisto, "pos 340 150");
 		   jpl.add(btnSelect, "pos 340 50");
 		   jpl.add(btnPrint, "pos 340 100");
 		   jpl.add(lblFile, "pos 100 380");
 		   jpl.add(lblSumColumns, "pos 100 400");
 		   
 		   btnPrint.setEnabled(false);
+		   btnHisto.setEnabled(false);
 		   
 		   String[] columns = {"Id","Column"};
 	   	
@@ -84,11 +90,10 @@ public class ColumnsView extends BaseView{
 	    	 	
 	    	     tblView.setModel(tableModel);
 	    	     tblView.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	    	     tblView.getColumnModel().getColumn(0).setMaxWidth(50);
-	    	     tblView.getColumnModel().getColumn(1).setMinWidth(250);
+	    	     tblView.getColumnModel().getColumn(0).setMinWidth(40);
+	    	     tblView.getColumnModel().getColumn(1).setMinWidth(220);
 	    	  
-	    	     
-	    	  
+
 	    	    
 	    	     DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 	    	     centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
@@ -110,6 +115,77 @@ btnClose.addActionListener(new ActionListener() {
     public void actionPerformed(ActionEvent e){
     	
     	dispose();
+    	
+    }
+	
+	
+});
+
+btnHisto.addActionListener(new ActionListener() {
+	
+    public void actionPerformed(ActionEvent e){
+    	
+ 
+           ArrayList<Integer> num = new  ArrayList<Integer>(); 
+           ArrayList<Integer> asOne = new  ArrayList<Integer>();
+           
+           // Getting numbers in ppg file
+           
+           for(int i=0; i<stiles.size(); i++) {
+        	   for(int j=0; j<8; j++) {
+        		   
+        		   asOne.add(stiles.get(i).get(j));
+        		   
+        		   if(!num.contains(stiles.get(i).get(j)))
+        		      num.add(stiles.get(i).get(j));
+        		   
+        	   }
+           }
+           
+           
+           Collections.sort(num);
+           
+           ArrayList<Integer> freq = new  ArrayList<Integer>();
+           
+           //Getting frequency of numbers
+           
+           for(int i=0; i<num.size(); i++) {
+        	  
+        	   int sel = num.get(i);
+        	   
+        	   int fr = Collections.frequency(asOne, sel);
+        	   
+        	   freq.add(fr);
+        	   
+           }
+           
+           // Making a new frame for the StatisticsPanel
+        
+           String title = lblFile.getText().substring(28, lblFile.getText().length());
+           
+           int[] values = new int[num.size()];
+           String[] labels = new String[num.size()];
+           
+           for(int i=0; i<num.size(); i++) {
+           	labels[i] = "" + num.get(i);
+           	values[i] = freq.get(i);
+           }
+           
+           Color color = new Color(0,0,255);
+
+           StatisticsPanel bc = new StatisticsPanel(values, labels, color, title);
+
+           JFrame frame = new JFrame("Histogramm");
+           frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+           frame.setSize(430, 250);
+           frame.setLocation(400, 300);
+           
+           frame.add(bc);
+           frame.setVisible(true);
+           frame.setResizable(false);
+    	
+    	
+    	
     	
     }
 	
@@ -217,6 +293,8 @@ btnSelect.addActionListener(new ActionListener() {
     			 lblSumColumns.setText(lblSumColumns.getText().substring(0,30) + stiles.size());
     			 
     			 btnPrint.setEnabled(true);
+    			 
+    			 btnHisto.setEnabled(true);
 		
     			
     
