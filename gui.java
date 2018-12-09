@@ -188,6 +188,7 @@ public class gui extends JFrame implements Printable, ItemListener{
 	   JGradientButton btnConditionsToFile = new JGradientButton(200, 50, 13,"System to doc file", "Saves system details as .doc file",156,142,175);
 	   pnlOperations.add(btnConditionsToFile, "pos 100 200");
 	   
+
 	   
 	   Component[] componentList = pnlOperations.getComponents();
 
@@ -273,6 +274,7 @@ btnNewSystem.addActionListener(new ActionListener() {
     	btnAll.setEnabled(true);
     	btnNone.setEnabled(true);
     	btnEndOfSelection.setEnabled(true);
+    	comboCompetitions.setEnabled(true);
     	
 
     	jtb.setEnabledAt(1, false);
@@ -527,8 +529,7 @@ all6.addActionListener(new ActionListener() {
 							addPointerHand(co);
 					}
 				   
-				   
-				   String str = "Columns : " + systima.calcColumnCombination();
+				   String str = "<html>Columns : <b><font size=5 color=blue>" + systima.calcColumnCombination() + "</font></b></html>";
 				   
 				   Message m = new Message("Full system columns", str , "Info");
 		            m.show();
@@ -546,47 +547,47 @@ btnGroupUp.addActionListener(new ActionListener() {
 		 DefaultTableModel tableModel = (DefaultTableModel) tblBasicColumns.getModel();
 		 
 		 String str = lblNumOfGroup.getText().substring(7);
-		 int currentOmilos = Integer.parseInt(str);
+		 int currentGroup = Integer.parseInt(str);
 		 
 		 
 
 		 
-		 if( systima.getGroups().size() == currentOmilos && 
-		     systima.getGroups().get(currentOmilos - 1).getBasicColumns().size() > 0 ) {
+		 if( systima.getGroups().size() == currentGroup && 
+		     systima.getGroups().get(currentGroup - 1).getBasicColumns().size() > 0 ) {
 			 
-			 systima.getGroups().add(new GroupBC(currentOmilos + 1));
+			 systima.getGroups().add(new GroupBC(currentGroup + 1));
 			 tableModel.setRowCount(0);
 			 
-			 lblNumOfGroup.setText(lblNumOfGroup.getText().substring(0,7) + (currentOmilos + 1));
+			 lblNumOfGroup.setText(lblNumOfGroup.getText().substring(0,7) + (currentGroup + 1));
 			 
-			 txtLimDown.setText("" + Collections.min(systima.getGroups().get(currentOmilos).getLimits()));
-			 txtLimUp.setText("" + Collections.max(systima.getGroups().get(currentOmilos).getLimits()));
+			 txtLimDown.setText("" + Collections.min(systima.getGroups().get(currentGroup).getLimits()));
+			 txtLimUp.setText("" + Collections.max(systima.getGroups().get(currentGroup).getLimits()));
 
 		 }
 		 
 		 else 
 			 
-			 if( systima.getGroups().size() > currentOmilos )
+			 if( systima.getGroups().size() > currentGroup )
 			 
 		 {
 			 
 			    tableModel.setRowCount(0);
 			    
-			    txtLimDown.setText("" + Collections.min(systima.getGroups().get(currentOmilos).getLimits()));
-				txtLimUp.setText("" + Collections.max(systima.getGroups().get(currentOmilos).getLimits()));
+			    txtLimDown.setText("" + Collections.min(systima.getGroups().get(currentGroup).getLimits()));
+				txtLimUp.setText("" + Collections.max(systima.getGroups().get(currentGroup).getLimits()));
 			 
 			 
-			    lblNumOfGroup.setText(lblNumOfGroup.getText().substring(0,7) + (currentOmilos + 1));
+			    lblNumOfGroup.setText(lblNumOfGroup.getText().substring(0,7) + (currentGroup + 1));
 			    
 			    str = lblNumOfGroup.getText().substring(7);
-				currentOmilos = Integer.parseInt(str);
+				currentGroup = Integer.parseInt(str);
 			    
 			 	
-			    for(int i=0; i<systima.getGroups().get(currentOmilos - 1).getBasicColumns().size(); i++) {
+			    for(int i=0; i<systima.getGroups().get(currentGroup - 1).getBasicColumns().size(); i++) {
 			    
 		 		int a = i + 1;
-		 		String b = removeClosures(systima.getGroups().get(currentOmilos - 1).getBasicColumns().get(i).getBasicColumn().toString());
-		 		String c = removeClosures(systima.getGroups().get(currentOmilos - 1).getBasicColumns().get(i).getLimits().toString());
+		 		String b = removeClosures(systima.getGroups().get(currentGroup - 1).getBasicColumns().get(i).getBasicColumn().toString());
+		 		String c = removeClosures(systima.getGroups().get(currentGroup - 1).getBasicColumns().get(i).getLimits().toString());
 		 		
 		 		
 		    	Object[] row = {a,b,c};
@@ -607,21 +608,21 @@ btnGroupUp.addActionListener(new ActionListener() {
 		 
 		 DefaultTableModel tableModel = (DefaultTableModel) tblBasicColumns.getModel();
 		 String str = lblNumOfGroup.getText().substring(7);
-		 int currentOmilos = Integer.parseInt(str);
+		 int currentGroup = Integer.parseInt(str);
 		 
-		 if(currentOmilos > 1) {
+		 if(currentGroup > 1) {
 			 
-			 currentOmilos = currentOmilos - 1;
+			 currentGroup = currentGroup - 1;
 		 
-		    lblNumOfGroup.setText(lblNumOfGroup.getText().substring(0,7) + (currentOmilos));
+		    lblNumOfGroup.setText(lblNumOfGroup.getText().substring(0,7) + (currentGroup));
 		 
 		    tableModel.setRowCount(0);
 			 
 		    
-		    int id = systima.getGroups().get(currentOmilos - 1).getId();
+		    int id = systima.getGroups().get(currentGroup - 1).getId();
 		    
-		    txtLimDown.setText("" + Collections.min(systima.getGroups().get(currentOmilos - 1).getLimits()));
-			txtLimUp.setText("" + Collections.max(systima.getGroups().get(currentOmilos - 1).getLimits()));
+		    txtLimDown.setText("" + Collections.min(systima.getGroups().get(currentGroup - 1).getLimits()));
+			txtLimUp.setText("" + Collections.max(systima.getGroups().get(currentGroup - 1).getLimits()));
 			 
 		 	
 		    for(int i=0; i<systima.getGroups().get(id-1).getBasicColumns().size(); i++) {
@@ -648,30 +649,30 @@ btnAddBasicColumn.addActionListener(new ActionListener() {
     public void actionPerformed(ActionEvent e){
     	
     				String str = lblNumOfGroup.getText().substring(7);
-    				int currentOmilos = Integer.parseInt(str) - 1;
+    				int currentGroup = Integer.parseInt(str) - 1;
 					
-		    	    ArrayList<Integer> tempKontra = new ArrayList<Integer>(tempBasicColumn);
-		    	    ArrayList<Integer> tempOrio = new ArrayList<Integer>(tempLimits);
+		    	    ArrayList<Integer> tempBC = new ArrayList<Integer>(tempBasicColumn);
+		    	    ArrayList<Integer> tempLimit = new ArrayList<Integer>(tempLimits);
 		    	    
-		    	    if(tempKontra.size() > 0 && tempOrio.size() > 0) {
+		    	    if(tempBC.size() > 0 && tempLimit.size() > 0) {
 					
-							BasicColumn vs = new BasicColumn(tempKontra,tempOrio);
+							BasicColumn vs = new BasicColumn(tempBC,tempLimit);
 																
-							systima.getGroups().get(currentOmilos).getBasicColumns().add(vs);
+							systima.getGroups().get(currentGroup).getBasicColumns().add(vs);
 							
 			
 						 	     
 						 	DefaultTableModel tableModel = (DefaultTableModel) tblBasicColumns.getModel();     
 						 	
 						
-						 	    int kon = (systima.getGroups().get(currentOmilos).getBasicColumns().size() - 1);
+						 	    int kon = (systima.getGroups().get(currentGroup).getBasicColumns().size() - 1);
 						 	
 						 		int a = kon + 1;
 						 		
 						 		
-						 		String b = removeClosures(systima.getGroups().get(currentOmilos).getBasicColumns().get(kon).getBasicColumn().toString());
+						 		String b = removeClosures(systima.getGroups().get(currentGroup).getBasicColumns().get(kon).getBasicColumn().toString());
 						 		
-						 		String c = removeClosures(systima.getGroups().get(currentOmilos).getBasicColumns().get(kon).getLimits().toString());
+						 		String c = removeClosures(systima.getGroups().get(currentGroup).getBasicColumns().get(kon).getLimits().toString());
 						 		
 						 		
 						    	Object[] row = {a,b,c};
@@ -710,7 +711,7 @@ btnAddBasicColumn.addActionListener(new ActionListener() {
 		    	    }
 		    	    	
 					 
-					 if(systima.getGroups().get(currentOmilos).getBasicColumns().size() > 0)
+					 if(systima.getGroups().get(currentGroup).getBasicColumns().size() > 0)
 						    btnDelBasicColumn.setEnabled(true);
 						 else
 							 btnDelBasicColumn.setEnabled(false);
@@ -736,11 +737,11 @@ btnDelBasicColumn.addActionListener(new ActionListener() {
 		    	tableModel.removeRow(row);
 		    	
 		    	String str = lblNumOfGroup.getText().substring(7);
-				int currentOmilos = Integer.parseInt(str);
+				int currentGroup = Integer.parseInt(str);
 				int j;
 				
 				for(j=0; j<systima.getGroups().size(); j++) {
-					if(systima.getGroups().get(j).getId()==currentOmilos)
+					if(systima.getGroups().get(j).getId()==currentGroup)
 						break;
 				}
 				
@@ -2690,9 +2691,7 @@ public static void main(String[] args) throws ParseException {
         ppg.setLocation(200, 50);
         ppg.setVisible(true);
         
-        
-
-        
+       
         
 	}
 
