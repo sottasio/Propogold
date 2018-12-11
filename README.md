@@ -13,9 +13,9 @@ In order to run this software, Java must be installed on your computer. You are 
 - ```jsoup-1.7.2``` For parsing html files.
 - ```json-simple-1.1.1``` For handling json files.
 
-You are also going to need some .jpg files (already uploaded as a folder named Images) that are displayed in Swing form.
+You are also going to need some .jpg files (already uploaded as a folder named Images) that are displayed in Swing.
 
-Main class is 'gui.java'.
+Main class is ```gui.java```.
 
 Because of the fact that this softwares writes and reads from disc, a maximum space of about 200mb is needed.
 
