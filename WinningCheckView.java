@@ -6,9 +6,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -28,6 +33,8 @@ public class WinningCheckView extends BaseView implements ItemListener{
 	
 	private JGradientButton btnWinCheck;
 	private JGradientButton btnCurrentColumns;
+	private JGradientButton btnSaveWinningColumn;
+	private JGradientButton btnLoadWinningColumn;
 	private JPanel matches_jpl;
 	private JPanel matches_finished_jpl;
 	private JCheckBox matches_check_checkboxes[];
@@ -63,6 +70,8 @@ public class WinningCheckView extends BaseView implements ItemListener{
 		
 		btnCurrentColumns = new JGradientButton(100, 35, 13,"Current", "Selects the current columns",156,142,175);
 		btnWinCheck = new JGradientButton(100, 35, 13,"Check", "Checks if there is a winning column",156,142,175);
+		btnSaveWinningColumn = new JGradientButton(100, 35, 13,"Save", "Saves winning column and finished matches to disk",156,142,175);
+		btnLoadWinningColumn = new JGradientButton(100, 35, 13,"Load", "Loads winning column and finished matches from disk",156,142,175);
 
 		analysis = new JCheckBox("<html><b>Analysis</html></b>");
 		prediction = new JCheckBox("<html><b>Prediction</html></b>");
@@ -105,13 +114,14 @@ public class WinningCheckView extends BaseView implements ItemListener{
 		super.getJpl().add(btnCurrentColumns, "pos 280 90");
 		super.getJpl().add(btnWinCheck, "pos 280 130");
 		super.getJpl().add(super.getBtnSelect(), "pos 280 50");
-		
+		super.getJpl().add(btnSaveWinningColumn, "pos 280 210");
+		super.getJpl().add(btnLoadWinningColumn, "pos 280 250");
 		
 		super.getJpl().add(super.getLblFile(), "pos 50 310");
 		super.getJpl().add(super.getLblSumColumns(), "pos 50 330");
 		
-		super.getJpl().add(analysis, "pos 280 260");
-		super.getJpl().add(prediction, "pos 280 280");
+		super.getJpl().add(analysis, "pos 280 300");
+		super.getJpl().add(prediction, "pos 280 320");
 		
 		btnWinCheck.setEnabled(false);
 	    analysis.setEnabled(false);
@@ -176,6 +186,169 @@ btnCurrentColumns.addActionListener(new ActionListener() {
 			}
 
 		});
+
+
+btnSaveWinningColumn.addActionListener(new ActionListener() {
+
+	
+	public void actionPerformed(ActionEvent arg0) {
+			
+
+		String path = "winning_column.txt";		//Name of the file where winning column will be saved			
+		File file = new File(path);
+		
+		if(file.exists()){
+			file.delete();
+		}
+		
+		FileWriter writer = null;
+		try {
+			writer = new FileWriter(path, true);
+		} catch (IOException e2) {
+			
+			e2.printStackTrace();
+		}
+		
+		BufferedWriter bw = new BufferedWriter(writer);
+		
+		for(int i=0; i<30; i++) {  // Saving winning column matches to file
+			String str = "";
+			if(matches_check_checkboxes[i].isSelected()) {
+				str = "" + i;
+				
+				try {
+
+					bw.write(str);
+					bw.newLine();
+					
+				} catch (IOException e1) {
+					
+					
+					e1.printStackTrace();
+				}
+				
+				
+
+			}
+		}
+		
+		try {
+			bw.write("--");           // The string -- seperates winning column from finished matches
+			bw.newLine();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		
+		
+		for(int i=0; i<30; i++) {
+			String str = "";
+			if(matches_finished_checkboxes[i].isSelected()) {  // Saving finished matches to file
+				str = "" + i;
+				
+				try {
+
+					bw.write(str);
+					bw.newLine();
+					
+				} catch (IOException e1) {
+					
+					
+					e1.printStackTrace();
+				}
+				
+				
+
+			}
+		}
+		
+		try {
+			bw.close();
+		} catch (IOException e1) {
+			
+			e1.printStackTrace();
+		}
+		
+		
+		
+		Message m = new Message("Success", "Winning column and finished matches succesfully saved to disk", "Info");
+        m.show();
+		
+			
+		}
+
+	});
+
+btnLoadWinningColumn.addActionListener(new ActionListener() {
+
+	
+	public void actionPerformed(ActionEvent arg0) {
+			
+
+		String path = "winning_column.txt";					
+		File file = new File(path);
+		
+
+		Reader reader = null;
+		try {
+			reader = new FileReader(path);
+			
+			BufferedReader br = new BufferedReader(reader);
+			
+			for(int i=0; i<30; i++) {
+				
+				matches_check_checkboxes[i].setSelected(false);     //Clears all selected checkboxed for winning column and
+				matches_finished_checkboxes[i].setSelected(false);  // finished matches
+			}
+			
+			String line;
+			
+		    try {
+				while ((line = br.readLine()) != null && !(line.equals("--"))) {
+				    int num = Integer.parseInt(line);
+				    matches_check_checkboxes[num].setSelected(true);
+				}
+				
+				
+				while ((line = br.readLine()) != null) {
+					if(!line.equals("--")) {
+				    int num = Integer.parseInt(line);
+				    matches_finished_checkboxes[num].setSelected(true);
+					}
+				}
+					
+				
+				
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+			}
+			
+			try {
+				br.close();
+				Message m = new Message("Success", "Winning column and finished matches succesfully loaded.", "Info");
+		        m.show();
+				
+			} catch (IOException e1) {
+				
+				e1.printStackTrace();
+			} 
+			
+			
+		} catch (IOException e2) {
+			
+			Message m = new Message("Error", "No file found", "Error");
+	        m.show();
+			
+		}
+		
+
+			
+		}
+
+	});
+
+
 
 btnWinCheck.addActionListener(new ActionListener() {
 
