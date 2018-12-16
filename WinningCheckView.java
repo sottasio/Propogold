@@ -486,16 +486,19 @@ public void calculateWinnings() {
 			 else {  // If checkbox 'prediction' is selected
 				 
 				 b = true;
+				 
 
-			      if((8 - matches.size() + sum_right) == 6 && (8 - sum_finished) > (8 - matches.size() - 1)) {
+			      if((sum_right + 8 - sum_finished) == 6 && ((8-matches.size() + sum_right) > 5)) {
 				
-				    if(analysis.isSelected())
-				    showAnalysis(j,6,csv_array,b);
+				    if(analysis.isSelected()) {
+				       showAnalysis(j,6,csv_array,b);
+				     
+				    }
 				   
-				    categ3 = categ3 + 1;
+				       categ3 = categ3 + 1;
 			         }
 			
-					if((8 - matches.size() + sum_right) == 7 && (8 - sum_finished) > (8 - matches.size() - 1)) {
+					if((sum_right + 8 - sum_finished) == 7 && ((8-matches.size() + sum_right) > 6)) {
 						
 						   if(analysis.isSelected())
 							   
@@ -505,7 +508,7 @@ public void calculateWinnings() {
 					 }
 					 
 					
-					if((8 - matches.size() + sum_right) == 8 && (8 - sum_finished) > (8 - matches.size() - 1)) {
+					if((sum_right + 8 - sum_finished) == 8 && ((8-matches.size() + sum_right) > 7)) {
 						
 						  if(analysis.isSelected())
 							  
