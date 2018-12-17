@@ -422,6 +422,8 @@ public void calculateWinnings() {
 			   matches_finished.add(i+1);
 	   }
 	   
+	   
+	   
 	   ArrayList<ArrayList<Integer>> csv_array = new  ArrayList<ArrayList<Integer>>();
 	   csv_array = readCsvToArrayList(getFilePath());
 	   
@@ -486,9 +488,9 @@ public void calculateWinnings() {
 			 else {  // If checkbox 'prediction' is selected
 				 
 				 b = true;
-				 
+				 	 
 
-			      if((sum_right + 8 - sum_finished) == 6 && ((8-matches.size() + sum_right) > 5)) {
+			      if((sum_right + 8 - matches.size()) == 6 && ((8-sum_finished) >= (8-matches.size()))) {
 				
 				    if(analysis.isSelected()) {
 				       showAnalysis(j,6,csv_array,b);
@@ -498,7 +500,7 @@ public void calculateWinnings() {
 				       categ3 = categ3 + 1;
 			         }
 			
-					if((sum_right + 8 - sum_finished) == 7 && ((8-matches.size() + sum_right) > 6)) {
+					if((sum_right + 8 - matches.size()) == 7 && ((8-sum_finished) >= (8-matches.size()))) {
 						
 						   if(analysis.isSelected())
 							   
@@ -508,7 +510,7 @@ public void calculateWinnings() {
 					 }
 					 
 					
-					if((sum_right + 8 - sum_finished) == 8 && ((8-matches.size() + sum_right) > 7)) {
+					if((sum_right + 8 - matches.size()) == 8 && ((8-sum_finished) >= (8-matches.size()))) {
 						
 						  if(analysis.isSelected())
 							  
